@@ -16,88 +16,82 @@
 * Feign
 * Spring Cloud OAuth2
 
-# 应用架构
+# 아키텍처
+* registry - 
+* config - 
+* monitor - 
+* zipkin - 
+* gateway - 
+* auth-service - 
+* svca-service - 
+* svcb-service - 
 
-该项目包含 8 个服务
-
-* registry - 服务注册与发现
-* config - 外部配置
-* monitor - 监控
-* zipkin - 分布式跟踪
-* gateway - 代理所有微服务的接口网关
-* auth-service - OAuth2 认证服务
-* svca-service - 业务服务A
-* svcb-service - 业务服务B
-
-## 体系架构
+## 아키텍처
 ![architecture](/screenshots/architecture.jpg)
-## 应用组件
+## 컴포넌트 구성
 ![components](/screenshots/components.jpg)
 
-# 启动项目
 
-* 使用 Docker 快速启动
-    1. 配置 Docker 环境
-    2. `mvn clean package` 打包项目及 Docker 镜像
-    3. 在项目根目录下执行 `docker-compose up -d` 启动所有项目
-* 本地手动启动
-    1. 配置 rabbitmq
-    2. 修改 hosts 将主机名指向到本地   
+# 사용방법
+* 기동 순서
+    1. rabbitmq
+    2. 호스트 파일 수정
        `127.0.0.1	registry config monitor rabbitmq auth-service`  
-       或者修改各服务配置文件中的相应主机名为本地 ip
-    3. 启动 registry、config、monitor、zipkin
-    4. 启动 gateway、auth-service、svca-service、svcb-service
+    3. registry、config、monitor、zipkin 기동
+    4. 기동 gateway、auth-service、svca-service、svcb-service
 
-# 项目预览
 
-## 注册中心
-访问 http://localhost:8761/ 默认账号 user，密码 password
+# 프로젝트 화면
+
+## Registry(Eureka)
+http://localhost:8761/ id : user，암호 : password
 
 ![registry](/screenshots/registry.jpg)
-## 监控
-访问 http://localhost:8040/ 默认账号 admin，密码 admin
-### 控制面板
+## 모니터링(Spring Boot Admin)
+http://localhost:8040/ id : admin，암호 : admin
+### 어플리케이션 목록/상태
 ![monitor](/screenshots/monitor1.jpg)
-### 应用注册历史
+### 어플리케이션 상태 이력
 ![monitor](/screenshots/monitor2.jpg)
-### Turbine Hystrix面板
+### Turbine Hystrix
 ![monitor](/screenshots/monitor3.jpg)
-### 应用信息、健康状况、垃圾回收等详情
+### 서비스 상세 정보
 ![monitor](/screenshots/monitor4.jpg)
-### 计数器
+### 카운터
 ![monitor](/screenshots/monitor5.jpg)
-### 查看和修改环境变量
+### 환경 변수보기 수정
 ![monitor](/screenshots/monitor6.jpg)
-### 管理 Logback 日志级别
+### Logback 관리
 ![monitor](/screenshots/monitor7.jpg)
-### 查看并使用 JMX
+### JMX
 ![monitor](/screenshots/monitor8.jpg)
-### 查看线程
+### 쓰레드
 ![monitor](/screenshots/monitor9.jpg)
-### 认证历史
+### 인증이력
 ![monitor](/screenshots/monitor10.jpg)
-### 查看 Http 请求轨迹
+### Http 이력
 ![monitor](/screenshots/monitor11.jpg)
-### Hystrix 面板
+### Hystrix
 ![monitor](/screenshots/monitor12.jpg)
-## 链路跟踪
-访问 http://localhost:9411/ 默认账号 admin，密码 admin
-### 控制面板
+## Zipkin
+http://localhost:9411/ id : admin，암호 : admin
+### 제어
 ![zipkin](/screenshots/zipkin1.jpg)
-### 链路跟踪明细
+### 링크세부정보 추적
 ![zipkin](/screenshots/zipkin2.jpg)
-### 服务依赖关系
+### 서비스 Dependencies
 ![zipkin](/screenshots/zipkin3.jpg)
-## RabbitMQ 监控
-Docker 启动访问 http://localhost:15673/ 默认账号 guest，密码 guest（本地 rabbit 管理系统默认端口15672）
+## RabbitMQ 관리자
+http://localhost:15673/ guest/guest（rabbitmq 포트는 15672）
 
 ![rabbit](/screenshots/rabbit.jpg)
-# 接口测试
-1. 获取 Token
+
+# Gateway 통한 API 호출 순서
+1. Token 획득
 ```
 curl -X POST -vu client:secret http://localhost:8060/uaa/oauth/token -H "Accept: application/json" -d "password=password&username=anil&grant_type=password&scope=read%20write"
 ```
-返回如下格式数据：
+응답결과：
 ```
 {
   "access_token": "eac56504-c4f0-4706-b72e-3dc3acdf45e9",
@@ -107,28 +101,28 @@ curl -X POST -vu client:secret http://localhost:8060/uaa/oauth/token -H "Accept:
   "scope": "read write"
 }
 ```
-2. 使用 access token 访问 service a 接口
+2. access token 사용하여 service a 호출
 ```
 curl -i -H "Authorization: Bearer eac56504-c4f0-4706-b72e-3dc3acdf45e9" http://localhost:8060/svca
 ```
-返回如下数据：
+응답결과：
 ```
 svca-service (172.18.0.8:8080)===>name:zhangxd
 svcb-service (172.18.0.2:8070)===>Say Hello
 ```
-3. 使用 access token 访问 service b 接口
+3. access token 사용하여 service b 호출
 ```
 curl -i -H "Authorization: Bearer eac56504-c4f0-4706-b72e-3dc3acdf45e9" http://localhost:8060/svcb
 ```
-返回如下数据：
+응답결과：
 ```
 svcb-service (172.18.0.2:8070)===>Say Hello
 ```
-4. 使用 refresh token 刷新 token
+4. refresh token 사용한 token 갱신
 ```
 curl -X POST -vu client:secret http://localhost:8060/uaa/oauth/token -H "Accept: application/json" -d "grant_type=refresh_token&refresh_token=da1007dc-683c-4309-965d-370b15aa4aeb"
 ```
-返回更新后的 Token：
+응답결과 Token：
 ```
 {
   "access_token": "63ff57ce-f140-482e-ba7e-b6f29df35c88",
@@ -138,7 +132,7 @@ curl -X POST -vu client:secret http://localhost:8060/uaa/oauth/token -H "Accept:
   "scope": "read write"
 }
 ```
-5. 刷新配置
+5. 갱신
 ```
 curl -X POST -vu user:password http://localhost:8888/bus/refresh
 ```
