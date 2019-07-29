@@ -25,8 +25,9 @@ public class ServiceAController {
 
     @GetMapping(value = "/")
     public String printServiceA() {
-        ServiceInstance serviceInstance = discoveryClient.getLocalServiceInstance();
-        return serviceInstance.getServiceId() + " (" + serviceInstance.getHost() + ":" + serviceInstance.getPort() + ")" + "===>name:" + name + "<br/>" + serviceBClient.printServiceB();
+        /*ServiceInstance serviceInstance = discoveryClient.getInstances("svca-service").get(0);
+        return serviceInstance.getServiceId() + " (" + serviceInstance.getHost() + ":" + serviceInstance.getPort() + ")" + "===>name:" + name + "<br/>" + serviceBClient.printServiceB();*/
+        return "Call Service A";
     }
 
     @GetMapping(path = "/current")

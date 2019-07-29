@@ -6,7 +6,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
-import org.springframework.security.config.annotation.authentication.configurers.GlobalAuthenticationConfigurerAdapter;
+import org.springframework.security.config.annotation.authentication.configuration.GlobalAuthenticationConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.oauth2.config.annotation.configurers.ClientDetailsServiceConfigurer;
 import org.springframework.security.oauth2.config.annotation.web.configuration.AuthorizationServerConfigurerAdapter;
@@ -85,9 +85,9 @@ public class OAuthConfiguration extends AuthorizationServerConfigurerAdapter {
         @Override
         public void init(AuthenticationManagerBuilder auth) throws Exception {
             auth.jdbcAuthentication().dataSource(dataSource)
-                    .withUser("dave").password("secret").roles("USER")
+                    .withUser("dave").password("{noop}secret").roles("USER")
                     .and()
-                    .withUser("anil").password("password").roles("ADMIN")
+                    .withUser("anil").password("{noop}password").roles("ADMIN")
             ;
         }
     }

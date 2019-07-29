@@ -20,7 +20,7 @@ public class ServiceBController {
 
     @GetMapping(value = "/")
     public String printServiceB() {
-        ServiceInstance serviceInstance = discoveryClient.getLocalServiceInstance();
+        ServiceInstance serviceInstance = discoveryClient.getInstances("ServiceA").get(0);
         return serviceInstance.getServiceId() + " (" + serviceInstance.getHost() + ":" + serviceInstance.getPort() + ")" + "===>Say " + msg;
     }
 }
