@@ -1,5 +1,7 @@
 server:
   port: 8080
+  servlet:
+    context-path: /svca
 
 name: ServiceA
 
@@ -8,18 +10,3 @@ eureka:
     metadata-map:
       user.name: ${security.user.name}
       user.password: ${security.user.password}
-
-spring:
-  application:
-    name: ServiceA
-  security:
-    user:
-      name: user
-      password: password
-    oauth2:
-      client:
-        clientId: svca-service
-        clientSecret: ${security.user.password}
-        accessTokenUri: http://${authserver.hostname}:${authserver.port}${authserver.contextPath}/oauth/token
-        grant-type: client_credentials
-        scope: server
