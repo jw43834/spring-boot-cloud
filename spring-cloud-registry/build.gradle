@@ -7,4 +7,4 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-security'
 }
 
-description = 'registry'
+description = 'spring-cloud-registry'

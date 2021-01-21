@@ -10,4 +10,4 @@ dependencies {
     implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client'
 }
 
-description = 'config'
+description = 'spring-cloud-config'
