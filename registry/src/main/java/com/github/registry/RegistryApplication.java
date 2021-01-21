@@ -16,7 +16,7 @@ public class RegistryApplication {
 	}
 
 	@EnableWebSecurity
-	static class WebSecurityCOnfig extends WebSecurityConfigurerAdapter{
+	static class WebSecurityConfig extends WebSecurityConfigurerAdapter{
 		@Override
 		protected void configure(HttpSecurity http) throws Exception{
 			http.csrf().disable();

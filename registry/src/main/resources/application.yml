@@ -2,6 +2,8 @@ server:
   port: 8761
 
 eureka:
+  server:
+    response-cache-update-interval-ms: 1000
   instance:
     hostname: registry
     prefer-ip-address: true
