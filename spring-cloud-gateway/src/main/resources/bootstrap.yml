@@ -30,3 +30,13 @@ spring:
           uri: lb://svca-service
           predicates:
             - Path=/svca/**
+        - id: notification-service
+          uri: lb://notification-service
+          predicates:
+            - Path=/svcb/**
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
